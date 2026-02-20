@@ -1,0 +1,700 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>情绪健康测试 - 演示版本</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://cdn.jsdelivr.net/npm/font-awesome@4.7.0/css/font-awesome.min.css" rel="stylesheet">
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        primary: '#3B82F6',
+                        secondary: '#60A5FA',
+                        accent: '#93C5FD',
+                        neutral: '#F0F9FF',
+                        'neutral-dark': '#E0F2FE'
+                    },
+                    fontFamily: {
+                        sans: ['Inter', 'system-ui', 'sans-serif']
+                    }
+                }
+            }
+        }
+    </script>
+    <style type="text/tailwindcss">
+        @layer utilities {
+            .glass-effect {
+                background: rgba(255, 255, 255, 0.8);
+                backdrop-filter: blur(10px);
+                border: 1px solid rgba(255, 255, 255, 0.2);
+            }
+            .text-shadow {
+                text-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+            }
+            .card-hover {
+                transition: all 0.3s ease;
+            }
+            .card-hover:hover {
+                transform: translateY(-4px);
+                box-shadow: 0 12px 24px rgba(59, 130, 246, 0.15);
+            }
+        }
+    </style>
+    <style>
+        body {
+            background: linear-gradient(135deg, #f0f9ff 0%, #e0f2fe 100%);
+            min-height: 100vh;
+        }
+        
+        .progress-bar {
+            transition: width 0.5s ease;
+        }
+        
+        .fade-in {
+            animation: fadeIn 0.5s ease-in;
+        }
+        
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        
+        .pulse {
+            animation: pulse 2s infinite;
+        }
+        
+        @keyframes pulse {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.7; }
+        }
+        
+        .bg-pattern {
+            background-image: 
+                radial-gradient(circle at 25% 25%, rgba(59, 130, 246, 0.1) 0%, transparent 50%),
+                radial-gradient(circle at 75% 75%, rgba(96, 165, 250, 0.1) 0%, transparent 50%);
+        }
+    </style>
+</head>
+<body class="bg-pattern">
+    <div class="min-h-screen flex items-center justify-center p-4">
+        <div class="max-w-4xl w-full">
+            <!-- 演示版本说明 -->
+            <div class="glass-effect rounded-2xl p-8 mb-8 shadow-lg">
+                <div class="text-center mb-6">
+                    <div class="inline-flex items-center justify-center w-16 h-16 bg-primary/10 rounded-full mb-4">
+                        <i class="fa fa-rocket text-primary text-2xl"></i>
+                    </div>
+                    <h1 class="text-3xl font-bold text-gray-800 mb-2">🚀 演示版本已就绪</h1>
+                    <p class="text-gray-600 text-lg">这是一个完整的情绪健康测试演示版本</p>
+                </div>
+
+                <div class="bg-blue-50 border border-blue-200 rounded-xl p-6 mb-6">
+                    <h3 class="text-lg font-semibold text-blue-800 mb-3 flex items-center">
+                        <i class="fa fa-info-circle mr-2"></i>
+                        演示版本说明
+                    </h3>
+                    <ul class="space-y-2 text-gray-700">
+                        <li class="flex items-start">
+                            <i class="fa fa-check-circle text-green-500 mt-1 mr-2"></i>
+                            <span>这是一个本地可运行的完整演示版本</span>
+                        </li>
+                        <li class="flex items-start">
+                            <i class="fa fa-check-circle text-green-500 mt-1 mr-2"></i>
+                            <span>包含完整的20道测试题目和评分系统</span>
+                        </li>
+                        <li class="flex items-start">
+                            <i class="fa fa-check-circle text-green-500 mt-1 mr-2"></i>
+                            <span>数据仅存储在您的本地设备，保护隐私</span>
+                        </li>
+                        <li class="flex items-start">
+                            <i class="fa fa-check-circle text-green-500 mt-1 mr-2"></i>
+                            <span>支持响应式设计，移动端和桌面端均可使用</span>
+                        </li>
+                    </ul>
+                </div>
+
+                <div class="bg-green-50 border border-green-200 rounded-xl p-6">
+                    <h3 class="text-lg font-semibold text-green-800 mb-3 flex items-center">
+                        <i class="fa fa-link mr-2"></i>
+                        演示网站链接
+                    </h3>
+                    <div class="bg-white rounded-lg p-4 border border-gray-200">
+                        <div class="flex items-center justify-between mb-2">
+                            <span class="text-sm text-gray-500">本地演示链接：</span>
+                            <button onclick="copyLink()" class="text-primary hover:text-primary-dark text-sm flex items-center">
+                                <i class="fa fa-copy mr-1"></i> 复制
+                            </button>
+                        </div>
+                        <div id="demo-link" class="font-mono text-sm bg-gray-50 p-3 rounded border border-gray-200 overflow-x-auto">
+                            file:///home/user/vibecoding/workspace/emotional-health-test/demo-version.html
+                        </div>
+                    </div>
+                    <p class="text-sm text-gray-600 mt-3">
+                        💡 提示：您可以直接在浏览器中打开上面的链接查看演示效果
+                    </p>
+                </div>
+
+                <div class="mt-8 text-center">
+                    <button onclick="startTest()" class="bg-primary hover:bg-blue-600 text-white font-semibold py-3 px-8 rounded-lg shadow-lg hover:shadow-xl transition-all duration-300 transform hover:-translate-y-1">
+                        <i class="fa fa-play-circle mr-2"></i>
+                        开始测试演示
+                    </button>
+                </div>
+            </div>
+
+            <!-- 测试内容区域 -->
+            <div id="test-container" class="hidden">
+                <!-- 进度条 -->
+                <div class="bg-white rounded-full h-2 mb-6 overflow-hidden shadow-sm">
+                    <div id="progress-bar" class="bg-primary h-full progress-bar" style="width: 0%"></div>
+                </div>
+
+                <!-- 测试卡片 -->
+                <div class="glass-effect rounded-2xl p-8 shadow-lg">
+                    <div class="text-center mb-8">
+                        <h2 id="question-number" class="text-2xl font-bold text-gray-800 mb-2">问题 1/20</h2>
+                        <p id="question-text" class="text-xl text-gray-700"></p>
+                    </div>
+
+                    <div id="options-container" class="space-y-3 mb-8">
+                        <!-- 选项将通过JavaScript动态生成 -->
+                    </div>
+
+                    <div class="flex justify-between">
+                        <button id="prev-btn" onclick="prevQuestion()" class="bg-gray-200 hover:bg-gray-300 text-gray-700 font-medium py-2 px-6 rounded-lg transition-colors duration-300 disabled:opacity-50 disabled:cursor-not-allowed">
+                            <i class="fa fa-arrow-left mr-2"></i>上一题
+                        </button>
+                        <button id="next-btn" onclick="nextQuestion()" class="bg-primary hover:bg-blue-600 text-white font-medium py-2 px-6 rounded-lg transition-colors duration-300">
+                            下一题<i class="fa fa-arrow-right ml-2"></i>
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 结果区域 -->
+            <div id="result-container" class="hidden">
+                <div class="glass-effect rounded-2xl p-8 shadow-lg">
+                    <div class="text-center mb-8">
+                        <div id="result-icon" class="inline-flex items-center justify-center w-20 h-20 rounded-full mb-4 text-3xl"></div>
+                        <h2 class="text-3xl font-bold text-gray-800 mb-2">测试完成！</h2>
+                        <p id="result-title" class="text-xl text-gray-700 mb-4"></p>
+                        <div class="inline-block bg-blue-100 text-blue-800 px-6 py-3 rounded-full text-lg font-semibold">
+                            得分：<span id="total-score" class="text-primary">0</span> / 60
+                        </div>
+                    </div>
+
+                    <div id="result-details" class="bg-white rounded-xl p-6 mb-6 border border-gray-200">
+                        <!-- 结果详情将通过JavaScript动态生成 -->
+                    </div>
+
+                    <div id="result-advice" class="bg-white rounded-xl p-6 mb-8 border border-gray-200">
+                        <!-- 建议将通过JavaScript动态生成 -->
+                    </div>
+
+                    <div class="text-center space-x-4">
+                        <button onclick="saveResult()" class="bg-green-600 hover:bg-green-700 text-white font-medium py-2 px-6 rounded-lg transition-colors duration-300">
+                            <i class="fa fa-save mr-2"></i>保存结果
+                        </button>
+                        <button onclick="restartTest()" class="bg-primary hover:bg-blue-600 text-white font-medium py-2 px-6 rounded-lg transition-colors duration-300">
+                            <i class="fa fa-refresh mr-2"></i>重新测试
+                        </button>
+                        <button onclick="backToDemo()" class="bg-gray-200 hover:bg-gray-300 text-gray-700 font-medium py-2 px-6 rounded-lg transition-colors duration-300">
+                            <i class="fa fa-home mr-2"></i>返回演示
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // 测试题目数据
+        const questions = [
+            {
+                text: "感觉心情低落、沮丧或绝望",
+                options: [
+                    { value: 0, text: "完全没有", score: 0 },
+                    { value: 1, text: "有几天", score: 1 },
+                    { value: 2, text: "超过一半天数", score: 2 },
+                    { value: 3, text: "几乎每天", score: 3 }
+                ]
+            },
+            {
+                text: "对做事情几乎没有兴趣或乐趣",
+                options: [
+                    { value: 0, text: "完全没有", score: 0 },
+                    { value: 1, text: "有几天", score: 1 },
+                    { value: 2, text: "超过一半天数", score: 2 },
+                    { value: 3, text: "几乎每天", score: 3 }
+                ]
+            },
+            {
+                text: "入睡困难、睡不安稳或睡太多",
+                options: [
+                    { value: 0, text: "完全没有", score: 0 },
+                    { value: 1, text: "有几天", score: 1 },
+                    { value: 2, text: "超过一半天数", score: 2 },
+                    { value: 3, text: "几乎每天", score: 3 }
+                ]
+            },
+            {
+                text: "感觉疲倦或没有活力",
+                options: [
+                    { value: 0, text: "完全没有", score: 0 },
+                    { value: 1, text: "有几天", score: 1 },
+                    { value: 2, text: "超过一半天数", score: 2 },
+                    { value: 3, text: "几乎每天", score: 3 }
+                ]
+            },
+            {
+                text: "感觉紧张、焦虑或坐立不安",
+                options: [
+                    { value: 0, text: "完全没有", score: 0 },
+                    { value: 1, text: "有几天", score: 1 },
+                    { value: 2, text: "超过一半天数", score: 2 },
+                    { value: 3, text: "几乎每天", score: 3 }
+                ]
+            },
+            {
+                text: "无法停止或控制担忧",
+                options: [
+                    { value: 0, text: "完全没有", score: 0 },
+                    { value: 1, text: "有几天", score: 1 },
+                    { value: 2, text: "超过一半天数", score: 2 },
+                    { value: 3, text: "几乎每天", score: 3 }
+                ]
+            },
+            {
+                text: "难以放松下来",
+                options: [
+                    { value: 0, text: "完全没有", score: 0 },
+                    { value: 1, text: "有几天", score: 1 },
+                    { value: 2, text: "超过一半天数", score: 2 },
+                    { value: 3, text: "几乎每天", score: 3 }
+                ]
+            },
+            {
+                text: "变得容易烦恼或急躁",
+                options: [
+                    { value: 0, text: "完全没有", score: 0 },
+                    { value: 1, text: "有几天", score: 1 },
+                    { value: 2, text: "超过一半天数", score: 2 },
+                    { value: 3, text: "几乎每天", score: 3 }
+                ]
+            },
+            {
+                text: "感觉自卑，或觉得自己很糟糕",
+                options: [
+                    { value: 0, text: "完全没有", score: 0 },
+                    { value: 1, text: "有几天", score: 1 },
+                    { value: 2, text: "超过一半天数", score: 2 },
+                    { value: 3, text: "几乎每天", score: 3 }
+                ]
+            },
+            {
+                text: "难以集中注意力",
+                options: [
+                    { value: 0, text: "完全没有", score: 0 },
+                    { value: 1, text: "有几天", score: 1 },
+                    { value: 2, text: "超过一半天数", score: 2 },
+                    { value: 3, text: "几乎每天", score: 3 }
+                ]
+            },
+            {
+                text: "感觉生活没有希望",
+                options: [
+                    { value: 0, text: "完全没有", score: 0 },
+                    { value: 1, text: "有几天", score: 1 },
+                    { value: 2, text: "超过一半天数", score: 2 },
+                    { value: 3, text: "几乎每天", score: 3 }
+                ]
+            },
+            {
+                text: "对未来感到悲观",
+                options: [
+                    { value: 0, text: "完全没有", score: 0 },
+                    { value: 1, text: "有几天", score: 1 },
+                    { value: 2, text: "超过一半天数", score: 2 },
+                    { value: 3, text: "几乎每天", score: 3 }
+                ]
+            },
+            {
+                text: "感到孤独或与他人疏远",
+                options: [
+                    { value: 0, text: "完全没有", score: 0 },
+                    { value: 1, text: "有几天", score: 1 },
+                    { value: 2, text: "超过一半天数", score: 2 },
+                    { value: 3, text: "几乎每天", score: 3 }
+                ]
+            },
+            {
+                text: "难以做出决定",
+                options: [
+                    { value: 0, text: "完全没有", score: 0 },
+                    { value: 1, text: "有几天", score: 1 },
+                    { value: 2, text: "超过一半天数", score: 2 },
+                    { value: 3, text: "几乎每天", score: 3 }
+                ]
+            },
+            {
+                text: "感觉生活没有意义",
+                options: [
+                    { value: 0, text: "完全没有", score: 0 },
+                    { value: 1, text: "有几天", score: 1 },
+                    { value: 2, text: "超过一半天数", score: 2 },
+                    { value: 3, text: "几乎每天", score: 3 }
+                ]
+            },
+            {
+                text: "肌肉紧张或疼痛",
+                options: [
+                    { value: 0, text: "完全没有", score: 0 },
+                    { value: 1, text: "有几天", score: 1 },
+                    { value: 2, text: "超过一半天数", score: 2 },
+                    { value: 3, text: "几乎每天", score: 3 }
+                ]
+            },
+            {
+                text: "心跳加速或呼吸急促",
+                options: [
+                    { value: 0, text: "完全没有", score: 0 },
+                    { value: 1, text: "有几天", score: 1 },
+                    { value: 2, text: "超过一半天数", score: 2 },
+                    { value: 3, text: "几乎每天", score: 3 }
+                ]
+            },
+            {
+                text: "感到头晕或 faint",
+                options: [
+                    { value: 0, text: "完全没有", score: 0 },
+                    { value: 1, text: "有几天", score: 1 },
+                    { value: 2, text: "超过一半天数", score: 2 },
+                    { value: 3, text: "几乎每天", score: 3 }
+                ]
+            },
+            {
+                text: "难以享受日常活动",
+                options: [
+                    { value: 0, text: "完全没有", score: 0 },
+                    { value: 1, text: "有几天", score: 1 },
+                    { value: 2, text: "超过一半天数", score: 2 },
+                    { value: 3, text: "几乎每天", score: 3 }
+                ]
+            },
+            {
+                text: "感觉自己是他人的负担",
+                options: [
+                    { value: 0, text: "完全没有", score: 0 },
+                    { value: 1, text: "有几天", score: 1 },
+                    { value: 2, text: "超过一半天数", score: 2 },
+                    { value: 3, text: "几乎每天", score: 3 }
+                ]
+            }
+        ];
+
+        let currentQuestion = 0;
+        let answers = new Array(questions.length).fill(null);
+        let scores = new Array(questions.length).fill(0);
+
+        // 开始测试
+        function startTest() {
+            document.querySelector('.glass-effect').classList.add('hidden');
+            document.getElementById('test-container').classList.remove('hidden');
+            showQuestion(currentQuestion);
+        }
+
+        // 显示问题
+        function showQuestion(index) {
+            const question = questions[index];
+            document.getElementById('question-number').textContent = `问题 ${index + 1}/${questions.length}`;
+            document.getElementById('question-text').textContent = question.text;
+
+            const optionsContainer = document.getElementById('options-container');
+            optionsContainer.innerHTML = '';
+
+            question.options.forEach((option, i) => {
+                const optionDiv = document.createElement('div');
+                optionDiv.className = `flex items-center p-4 border rounded-lg cursor-pointer transition-colors duration-200 ${answers[index] === option.value ? 'bg-primary/10 border-primary' : 'border-gray-200 hover:bg-gray-50'}`;
+                optionDiv.onclick = () => selectOption(option.value, option.score);
+                
+                optionDiv.innerHTML = `
+                    <div class="flex items-center justify-center w-6 h-6 rounded-full border-2 ${answers[index] === option.value ? 'border-primary bg-primary text-white' : 'border-gray-300'} mr-3">
+                        ${answers[index] === option.value ? '<i class="fa fa-check text-sm"></i>' : ''}
+                    </div>
+                    <span class="text-gray-700">${option.text}</span>
+                `;
+                
+                optionsContainer.appendChild(optionDiv);
+            });
+
+            // 更新进度条
+            const progress = ((index + 1) / questions.length) * 100;
+            document.getElementById('progress-bar').style.width = `${progress}%`;
+
+            // 更新按钮状态
+            document.getElementById('prev-btn').disabled = index === 0;
+            document.getElementById('next-btn').textContent = index === questions.length - 1 ? '完成测试' : '下一题';
+            document.getElementById('next-btn').innerHTML = index === questions.length - 1 ? 
+                '<i class="fa fa-check mr-2"></i>完成测试' : '下一题<i class="fa fa-arrow-right ml-2"></i>';
+        }
+
+        // 选择选项
+        function selectOption(value, score) {
+            answers[currentQuestion] = value;
+            scores[currentQuestion] = score;
+            showQuestion(currentQuestion);
+        }
+
+        // 上一题
+        function prevQuestion() {
+            if (currentQuestion > 0) {
+                currentQuestion--;
+                showQuestion(currentQuestion);
+            }
+        }
+
+        // 下一题
+        function nextQuestion() {
+            if (answers[currentQuestion] === null) {
+                alert('请选择一个选项');
+                return;
+            }
+
+            if (currentQuestion < questions.length - 1) {
+                currentQuestion++;
+                showQuestion(currentQuestion);
+            } else {
+                showResult();
+            }
+        }
+
+        // 显示结果
+        function showResult() {
+            document.getElementById('test-container').classList.add('hidden');
+            document.getElementById('result-container').classList.remove('hidden');
+
+            const totalScore = scores.reduce((sum, score) => sum + score, 0);
+            document.getElementById('total-score').textContent = totalScore;
+
+            // 根据分数确定结果
+            let resultTitle, resultIcon, resultColor, resultDetails, resultAdvice;
+
+            if (totalScore <= 10) {
+                resultTitle = "情绪状态良好";
+                resultIcon = '<i class="fa fa-smile-o"></i>';
+                resultColor = 'bg-green-100 text-green-600 border-green-200';
+                resultDetails = `
+                    <p class="mb-4">您的情绪健康状况良好，继续保持积极的生活态度和健康的生活方式。</p>
+                    <h4 class="font-semibold text-gray-800 mb-2">优势：</h4>
+                    <ul class="list-disc list-inside text-gray-700 space-y-1">
+                        <li>情绪管理能力良好</li>
+                        <li>积极的生活态度</li>
+                        <li>良好的心理韧性</li>
+                    </ul>
+                `;
+                resultAdvice = `
+                    <h4 class="font-semibold text-gray-800 mb-3">建议：</h4>
+                    <ul class="space-y-2 text-gray-700">
+                        <li class="flex items-start">
+                            <i class="fa fa-check-circle text-green-500 mt-1 mr-2"></i>
+                            <span>继续保持规律的作息和健康的生活习惯</span>
+                        </li>
+                        <li class="flex items-start">
+                            <i class="fa fa-check-circle text-green-500 mt-1 mr-2"></i>
+                            <span>定期进行自我反思和情绪觉察</span>
+                        </li>
+                        <li class="flex items-start">
+                            <i class="fa fa-check-circle text-green-500 mt-1 mr-2"></i>
+                            <span>培养兴趣爱好，丰富生活内容</span>
+                        </li>
+                    </ul>
+                `;
+            } else if (totalScore <= 25) {
+                resultTitle = "轻度情绪困扰";
+                resultIcon = '<i class="fa fa-meh-o"></i>';
+                resultColor = 'bg-yellow-100 text-yellow-600 border-yellow-200';
+                resultDetails = `
+                    <p class="mb-4">您可能正经历轻度的情绪困扰，这在生活中是比较常见的。适当的调整可以帮助您改善情绪状态。</p>
+                    <h4 class="font-semibold text-gray-800 mb-2">需要关注的方面：</h4>
+                    <ul class="list-disc list-inside text-gray-700 space-y-1">
+                        <li>情绪波动可能较为明显</li>
+                        <li>可能存在一定的压力或焦虑</li>
+                        <li>睡眠或食欲可能受到影响</li>
+                    </ul>
+                `;
+                resultAdvice = `
+                    <h4 class="font-semibold text-gray-800 mb-3">建议：</h4>
+                    <ul class="space-y-2 text-gray-700">
+                        <li class="flex items-start">
+                            <i class="fa fa-check-circle text-blue-500 mt-1 mr-2"></i>
+                            <span>学习简单的情绪调节技巧，如深呼吸、冥想等</span>
+                        </li>
+                        <li class="flex items-start">
+                            <i class="fa fa-check-circle text-blue-500 mt-1 mr-2"></i>
+                            <span>保持规律的运动，有助于释放压力</span>
+                        </li>
+                        <li class="flex items-start">
+                            <i class="fa fa-check-circle text-blue-500 mt-1 mr-2"></i>
+                            <span>与亲友分享您的感受，寻求情感支持</span>
+                        </li>
+                        <li class="flex items-start">
+                            <i class="fa fa-check-circle text-blue-500 mt-1 mr-2"></i>
+                            <span>如果困扰持续，考虑寻求专业心理咨询</span>
+                        </li>
+                    </ul>
+                `;
+            } else if (totalScore <= 40) {
+                resultTitle = "中度情绪问题";
+                resultIcon = '<i class="fa fa-frown-o"></i>';
+                resultColor = 'bg-orange-100 text-orange-600 border-orange-200';
+                resultDetails = `
+                    <p class="mb-4">您的情绪状态可能需要更多关注，中度的情绪问题可能会影响到日常生活和工作。</p>
+                    <h4 class="font-semibold text-gray-800 mb-2">主要表现：</h4>
+                    <ul class="list-disc list-inside text-gray-700 space-y-1">
+                        <li>情绪低落或焦虑较为明显</li>
+                        <li>可能影响到工作效率和人际关系</li>
+                        <li>睡眠、食欲等生理功能可能受到影响</li>
+                    </ul>
+                `;
+                resultAdvice = `
+                    <h4 class="font-semibold text-gray-800 mb-3">建议：</h4>
+                    <ul class="space-y-2 text-gray-700">
+                        <li class="flex items-start">
+                            <i class="fa fa-exclamation-circle text-orange-500 mt-1 mr-2"></i>
+                            <span><strong>建议寻求专业心理咨询师的帮助</strong></span>
+                        </li>
+                        <li class="flex items-start">
+                            <i class="fa fa-check-circle text-blue-500 mt-1 mr-2"></i>
+                            <span>建立规律的生活作息，保证充足睡眠</span>
+                        </li>
+                        <li class="flex items-start">
+                            <i class="fa fa-check-circle text-blue-500 mt-1 mr-2"></i>
+                            <span>避免过度工作或压力，学会合理安排时间</span>
+                        </li>
+                        <li class="flex items-start">
+                            <i class="fa fa-check-circle text-blue-500 mt-1 mr-2"></i>
+                            <span>与信任的人分享您的感受和困扰</span>
+                        </li>
+                    </ul>
+                `;
+            } else {
+                resultTitle = "重度情绪困扰";
+                resultIcon = '<i class="fa fa-sad-tear"></i>';
+                resultColor = 'bg-red-100 text-red-600 border-red-200';
+                resultDetails = `
+                    <p class="mb-4">您可能正经历较为严重的情绪困扰，这需要高度重视并及时寻求专业帮助。</p>
+                    <h4 class="font-semibold text-gray-800 mb-2">需要立即关注的问题：</h4>
+                    <ul class="list-disc list-inside text-gray-700 space-y-1">
+                        <li>持续的情绪低落或焦虑</li>
+                        <li>可能存在消极思维或行为</li>
+                        <li>日常生活功能可能受到明显影响</li>
+                    </ul>
+                `;
+                resultAdvice = `
+                    <h4 class="font-semibold text-gray-800 mb-3">紧急建议：</h4>
+                    <ul class="space-y-2 text-gray-700">
+                        <li class="flex items-start">
+                            <i class="fa fa-exclamation-triangle text-red-500 mt-1 mr-2"></i>
+                            <span><strong>请立即寻求专业心理健康服务</strong></span>
+                        </li>
+                        <li class="flex items-start">
+                            <i class="fa fa-phone text-blue-500 mt-1 mr-2"></i>
+                            <span>心理危机干预热线：400-161-9995（北京）</span>
+                        </li>
+                        <li class="flex items-start">
+                            <i class="fa fa-user-md text-blue-500 mt-1 mr-2"></i>
+                            <span>尽快预约心理医生或精神科医生</span>
+                        </li>
+                        <li class="flex items-start">
+                            <i class="fa fa-users text-blue-500 mt-1 mr-2"></i>
+                            <span>不要独自面对，寻求亲友的陪伴和支持</span>
+                        </li>
+                    </ul>
+                `;
+            }
+
+            document.getElementById('result-title').textContent = resultTitle;
+            document.getElementById('result-icon').className = `${resultColor} inline-flex items-center justify-center w-20 h-20 rounded-full mb-4 text-3xl`;
+            document.getElementById('result-icon').innerHTML = resultIcon;
+            document.getElementById('result-details').innerHTML = resultDetails;
+            document.getElementById('result-advice').innerHTML = resultAdvice;
+        }
+
+        // 保存结果
+        function saveResult() {
+            const totalScore = scores.reduce((sum, score) => sum + score, 0);
+            const resultData = {
+                score: totalScore,
+                answers: answers,
+                scores: scores,
+                timestamp: new Date().toISOString()
+            };
+            
+            try {
+                localStorage.setItem('emotionalHealthTestResult', JSON.stringify(resultData));
+                alert('测试结果已保存到本地！');
+            } catch (error) {
+                alert('保存失败，请手动记录您的测试结果。');
+            }
+        }
+
+        // 重新测试
+        function restartTest() {
+            currentQuestion = 0;
+            answers = new Array(questions.length).fill(null);
+            scores = new Array(questions.length).fill(0);
+            document.getElementById('result-container').classList.add('hidden');
+            document.getElementById('test-container').classList.remove('hidden');
+            showQuestion(currentQuestion);
+        }
+
+        // 返回演示
+        function backToDemo() {
+            document.getElementById('result-container').classList.add('hidden');
+            document.querySelector('.glass-effect').classList.remove('hidden');
+        }
+
+        // 复制链接
+        function copyLink() {
+            const linkText = document.getElementById('demo-link').textContent;
+            navigator.clipboard.writeText(linkText).then(() => {
+                alert('链接已复制到剪贴板！');
+            }).catch(err => {
+                alert('复制失败，请手动复制。');
+            });
+        }
+
+        // 添加键盘导航支持
+        document.addEventListener('keydown', function(e) {
+            if (document.getElementById('test-container').classList.contains('hidden')) return;
+            
+            if (e.key === 'ArrowLeft') {
+                if (currentQuestion > 0) {
+                    prevQuestion();
+                }
+            } else if (e.key === 'ArrowRight') {
+                if (answers[currentQuestion] !== null) {
+                    if (currentQuestion < questions.length - 1) {
+                        nextQuestion();
+                    } else {
+                        showResult();
+                    }
+                }
+            }
+        });
+
+        // 添加页面加载动画
+        window.addEventListener('load', function() {
+            document.body.style.opacity = '0';
+            document.body.style.transition = 'opacity 0.5s ease';
+            
+            setTimeout(function() {
+                document.body.style.opacity = '1';
+            }, 100);
+        });
+    </script>
+</body>
+</html>
