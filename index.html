@@ -66,8 +66,38 @@
         <!-- 头部 -->
         <header class="text-center mb-8 animate-fade-in">
             <div class="flex justify-center mb-4">
-                <img src="https://p9-flow-imagex-sign.byteimg.com/tos-cn-i-a9rns2rl98/rc/pc/super_tool/ca1c9c6adc564d898b26dd1538f0dbc0~tplv-a9rns2rl98-image.image?lk3s=8e244e95&rcl=202602201135220C719BA4608C48592F4A&rrcfp=f06b921b&x-expires=1774150555&x-signature=3FlezjVc4I89FNtlqbe%2Fy3bHLEA%3D" 
-                     alt="情绪健康测试" class="w-24 h-24">
+
+
+<!-- Logo区域 -->
+<div class="logo">
+  <img src="https://raw.githubusercontent.com/zpphv6qg5g-ai/nuonuo/refs/heads/main/logo%E8%83%8C%E6%99%AF%E9%80%8F%E6%98%8E%E7%89%88%E6%9C%AC%EF%BC%88%E5%B7%A6%E5%8F%B3%EF%BC%89.png" alt="若言心理" class="logo-img">
+</div>
+
+<style>
+/* Logo样式 */
+.logo {
+  text-align: center;
+  margin-bottom: 20px;
+}
+
+.logo-img {
+  max-width: 400px;
+  height: auto;
+  display: inline-block;
+  border-radius: 8px;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+}
+
+/* 响应式设计 */
+@media (max-width: 768px) {
+  .logo-img {
+    max-width: 150px;
+  }
+}
+</style>
+
+              
+                   
             </div>
             <h1 class="text-4xl font-bold text-blue-800 text-shadow mb-2">情绪健康测试</h1>
             <p class="text-lg text-blue-600 max-w-2xl mx-auto">
@@ -337,7 +367,7 @@
             },
             {
                 id: 6,
-                text: "觉得自己很糟糕，或觉得自己很失败，或让自己或家人失望",
+                text: "觉得自己很糟糕，或觉得自己很失败，或让自己/家人失望",
                 category: "自我认知",
                 options: [
                     { value: 0, text: "完全没有", score: 4 },
