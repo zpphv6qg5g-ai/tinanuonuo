@@ -1,0 +1,948 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>情绪健康测试</title>
+    <!-- Tailwind CSS v3 -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Font Awesome -->
+    <link href="https://cdn.jsdelivr.net/npm/font-awesome@4.7.0/css/font-awesome.min.css" rel="stylesheet">
+    <!-- 统一的 Tailwind 配置 -->
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        primary: '#3B82F6',
+                        secondary: '#60A5FA',
+                        accent: '#93C5FD',
+                        neutral: '#F0F9FF',
+                        'neutral-dark': '#E0F2FE',
+                    },
+                    fontFamily: {
+                        sans: ['Inter', 'system-ui', 'sans-serif'],
+                    },
+                    animation: {
+                        'fade-in': 'fadeIn 0.5s ease-in-out',
+                        'slide-in': 'slideIn 0.5s ease-in-out',
+                    },
+                    keyframes: {
+                        fadeIn: {
+                            '0%': { opacity: '0' },
+                            '100%': { opacity: '1' },
+                        },
+                        slideIn: {
+                            '0%': { transform: 'translateY(20px)', opacity: '0' },
+                            '100%': { transform: 'translateY(0)', opacity: '1' },
+                        },
+                    },
+                }
+            }
+        }
+    </script>
+    <style type="text/tailwindcss">
+        @layer utilities {
+            .text-shadow {
+                text-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+            }
+            .card-shadow {
+                box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+            }
+            .transition-all-300 {
+                transition: all 0.3s ease;
+            }
+        }
+    </style>
+</head>
+<body class="bg-gradient-to-br from-blue-50 to-blue-100 min-h-screen">
+    <!-- 背景图 -->
+    <div class="fixed inset-0 z-0 opacity-20 pointer-events-none">
+        <img src="https://p6-flow-imagex-sign.byteimg.com/tos-cn-i-a9rns2rl98/rc/pc/super_tool/0d1aba8e46c84a8897266d4a9e56d6e2~tplv-a9rns2rl98-image.image?lk3s=8e244e95&rcl=202602201135220C719BA4608C48592F4A&rrcfp=f06b921b&x-expires=1774150545&x-signature=4l3wpOZaayiWGhFodnVFnnKyec8%3D" 
+             alt="背景" class="w-full h-full object-cover">
+    </div>
+
+    <div class="relative z-10 container mx-auto px-4 py-8 max-w-4xl">
+        <!-- 头部 -->
+        <header class="text-center mb-8 animate-fade-in">
+            <div class="flex justify-center mb-4">
+                <img src="https://p9-flow-imagex-sign.byteimg.com/tos-cn-i-a9rns2rl98/rc/pc/super_tool/ca1c9c6adc564d898b26dd1538f0dbc0~tplv-a9rns2rl98-image.image?lk3s=8e244e95&rcl=202602201135220C719BA4608C48592F4A&rrcfp=f06b921b&x-expires=1774150555&x-signature=3FlezjVc4I89FNtlqbe%2Fy3bHLEA%3D" 
+                     alt="情绪健康测试" class="w-24 h-24">
+            </div>
+            <h1 class="text-4xl font-bold text-blue-800 text-shadow mb-2">情绪健康测试</h1>
+            <p class="text-lg text-blue-600 max-w-2xl mx-auto">
+                这个测试将帮助您了解自己的情绪健康状况，大约需要10分钟完成。
+                请根据过去两周内的实际感受回答问题。
+            </p>
+        </header>
+
+        <!-- 进度条 -->
+        <div class="mb-8 bg-white rounded-full h-2.5 shadow-inner overflow-hidden">
+            <div id="progress-bar" class="bg-gradient-to-r from-blue-500 to-blue-300 h-2.5 rounded-full transition-all duration-300" style="width: 0%"></div>
+        </div>
+
+        <!-- 测试说明 -->
+        <div id="intro-section" class="bg-white rounded-xl p-6 mb-8 card-shadow animate-slide-in">
+            <h2 class="text-2xl font-semibold text-blue-700 mb-4">测试说明</h2>
+            <ul class="list-disc list-inside space-y-2 text-gray-700 mb-6">
+                <li>本测试包含<span class="font-semibold">20道题目</span>，涵盖情绪、睡眠、食欲、社交等方面。</li>
+                <li>请根据过去两周内的实际感受选择最符合的选项。</li>
+                <li>测试结果仅供参考，不能替代专业医疗诊断。</li>
+                <li>如测试结果显示您可能存在较严重的情绪问题，建议寻求专业心理咨询师或医生的帮助。</li>
+            </ul>
+            <div class="flex justify-center">
+                <button id="start-test" class="bg-blue-600 hover:bg-blue-700 text-white font-medium py-3 px-8 rounded-lg transition-all-300 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-opacity-50 shadow-md hover:shadow-lg">
+                    开始测试
+                </button>
+            </div>
+        </div>
+
+        <!-- 测试问卷 -->
+        <div id="test-section" class="hidden">
+            <div class="bg-white rounded-xl p-6 mb-6 card-shadow animate-slide-in">
+                <div class="flex justify-between items-center mb-4">
+                    <h3 id="question-number" class="text-xl font-semibold text-blue-700">问题 <span id="current-question">1</span>/20</h3>
+                    <div class="text-sm text-gray-500" id="question-category">情绪状态</div>
+                </div>
+                <h4 id="question-text" class="text-lg font-medium text-gray-800 mb-6"></h4>
+                
+                <div id="options-container" class="space-y-3 mb-6">
+                    <!-- 选项将通过JavaScript动态生成 -->
+                </div>
+                
+                <div class="flex justify-between">
+                    <button id="prev-question" class="bg-gray-200 hover:bg-gray-300 text-gray-700 font-medium py-2 px-6 rounded-lg transition-all-300 focus:outline-none focus:ring-2 focus:ring-gray-400 focus:ring-opacity-50 hidden">
+                        上一题
+                    </button>
+                    <div class="ml-auto">
+                        <button id="next-question" class="bg-blue-600 hover:bg-blue-700 text-white font-medium py-2 px-6 rounded-lg transition-all-300 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-opacity-50 shadow-md hover:shadow-lg">
+                            下一题
+                        </button>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="bg-blue-50 rounded-xl p-4 mb-6 border border-blue-200">
+                <p class="text-sm text-blue-700">
+                    <i class="fa fa-info-circle mr-2"></i>
+                    请诚实回答每个问题，根据您过去两周的真实感受选择最符合的选项。
+                </p>
+            </div>
+        </div>
+
+        <!-- 测试结果 -->
+        <div id="result-section" class="hidden">
+            <div class="bg-white rounded-xl p-6 mb-6 card-shadow animate-slide-in">
+                <h2 class="text-2xl font-semibold text-blue-700 mb-4 text-center">测试结果</h2>
+                
+                <div class="mb-8">
+                    <div class="flex justify-between items-center mb-2">
+                        <span class="text-gray-700 font-medium">总体情绪健康指数</span>
+                        <span id="total-score" class="text-xl font-bold text-blue-700">85/100</span>
+                    </div>
+                    <div class="w-full bg-gray-200 rounded-full h-3 overflow-hidden">
+                        <div id="total-score-bar" class="bg-gradient-to-r from-green-500 to-blue-500 h-3 rounded-full transition-all duration-500" style="width: 85%"></div>
+                    </div>
+                </div>
+                
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-8">
+                    <div class="bg-blue-50 rounded-lg p-4">
+                        <h3 class="text-lg font-semibold text-blue-700 mb-3">情绪状态</h3>
+                        <div class="flex justify-between items-center mb-1">
+                            <span class="text-sm text-gray-600">得分</span>
+                            <span id="emotion-score" class="text-base font-medium text-blue-700">8/10</span>
+                        </div>
+                        <div class="w-full bg-gray-200 rounded-full h-2 overflow-hidden">
+                            <div id="emotion-score-bar" class="bg-blue-500 h-2 rounded-full transition-all duration-500" style="width: 80%"></div>
+                        </div>
+                    </div>
+                    
+                    <div class="bg-blue-50 rounded-lg p-4">
+                        <h3 class="text-lg font-semibold text-blue-700 mb-3">睡眠质量</h3>
+                        <div class="flex justify-between items-center mb-1">
+                            <span class="text-sm text-gray-600">得分</span>
+                            <span id="sleep-score" class="text-base font-medium text-blue-700">7/10</span>
+                        </div>
+                        <div class="w-full bg-gray-200 rounded-full h-2 overflow-hidden">
+                            <div id="sleep-score-bar" class="bg-blue-500 h-2 rounded-full transition-all duration-500" style="width: 70%"></div>
+                        </div>
+                    </div>
+                    
+                    <div class="bg-blue-50 rounded-lg p-4">
+                        <h3 class="text-lg font-semibold text-blue-700 mb-3">社交功能</h3>
+                        <div class="flex justify-between items-center mb-1">
+                            <span class="text-sm text-gray-600">得分</span>
+                            <span id="social-score" class="text-base font-medium text-blue-700">9/10</span>
+                        </div>
+                        <div class="w-full bg-gray-200 rounded-full h-2 overflow-hidden">
+                            <div id="social-score-bar" class="bg-blue-500 h-2 rounded-full transition-all duration-500" style="width: 90%"></div>
+                        </div>
+                    </div>
+                    
+                    <div class="bg-blue-50 rounded-lg p-4">
+                        <h3 class="text-lg font-semibold text-blue-700 mb-3">自我认知</h3>
+                        <div class="flex justify-between items-center mb-1">
+                            <span class="text-sm text-gray-600">得分</span>
+                            <span id="self-score" class="text-base font-medium text-blue-700">8/10</span>
+                        </div>
+                        <div class="w-full bg-gray-200 rounded-full h-2 overflow-hidden">
+                            <div id="self-score-bar" class="bg-blue-500 h-2 rounded-full transition-all duration-500" style="width: 80%"></div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="mb-6">
+                    <h3 class="text-lg font-semibold text-blue-700 mb-3">结果解读</h3>
+                    <div id="result-interpretation" class="bg-gray-50 rounded-lg p-4 text-gray-700 leading-relaxed">
+                        <!-- 结果解读将通过JavaScript动态生成 -->
+                    </div>
+                </div>
+                
+                <div class="mb-6">
+                    <h3 class="text-lg font-semibold text-blue-700 mb-3">建议</h3>
+                    <ul id="result-suggestions" class="list-disc list-inside space-y-2 text-gray-700 bg-gray-50 rounded-lg p-4">
+                        <!-- 建议将通过JavaScript动态生成 -->
+                    </ul>
+                </div>
+                
+                <div class="text-center text-sm text-gray-500 mt-8">
+                    <p>注意：本测试结果仅供参考，不能替代专业医疗诊断。如您有严重的情绪困扰，请寻求专业帮助。</p>
+                </div>
+            </div>
+            
+            <div class="flex justify-center space-x-4">
+                <button id="save-result" class="bg-blue-600 hover:bg-blue-700 text-white font-medium py-2 px-6 rounded-lg transition-all-300 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-opacity-50 shadow-md hover:shadow-lg">
+                    <i class="fa fa-download mr-2"></i>保存结果
+                </button>
+                <button id="restart-test" class="bg-gray-200 hover:bg-gray-300 text-gray-700 font-medium py-2 px-6 rounded-lg transition-all-300 focus:outline-none focus:ring-2 focus:ring-gray-400 focus:ring-opacity-50">
+                    <i class="fa fa-refresh mr-2"></i>重新测试
+                </button>
+            </div>
+        </div>
+
+        <!-- 保存结果弹窗 -->
+        <div id="save-modal" class="fixed inset-0 z-50 hidden">
+            <div class="absolute inset-0 bg-black bg-opacity-50 backdrop-blur-sm"></div>
+            <div class="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 bg-white rounded-xl p-6 max-w-md w-full mx-4 card-shadow animate-fade-in">
+                <h3 class="text-xl font-semibold text-blue-700 mb-4">保存测试结果</h3>
+                <p class="text-gray-600 mb-6">请选择保存方式：</p>
+                
+                <div class="space-y-4 mb-6">
+                    <button id="save-as-image" class="w-full flex items-center justify-center bg-blue-600 hover:bg-blue-700 text-white font-medium py-3 px-6 rounded-lg transition-all-300 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-opacity-50 shadow-md hover:shadow-lg">
+                        <i class="fa fa-file-image-o mr-3 text-xl"></i>
+                        <div class="text-left">
+                            <div class="font-medium">保存为图片</div>
+                            <div class="text-xs text-blue-100">PNG格式，可直接保存到设备</div>
+                        </div>
+                    </button>
+                    
+                    <button id="save-as-pdf" class="w-full flex items-center justify-center bg-blue-600 hover:bg-blue-700 text-white font-medium py-3 px-6 rounded-lg transition-all-300 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-opacity-50 shadow-md hover:shadow-lg">
+                        <i class="fa fa-file-pdf-o mr-3 text-xl"></i>
+                        <div class="text-left">
+                            <div class="font-medium">保存为PDF</div>
+                            <div class="text-xs text-blue-100">PDF格式，适合打印或分享</div>
+                        </div>
+                    </button>
+                    
+                    <button id="copy-result" class="w-full flex items-center justify-center bg-gray-200 hover:bg-gray-300 text-gray-700 font-medium py-3 px-6 rounded-lg transition-all-300 focus:outline-none focus:ring-2 focus:ring-gray-400 focus:ring-opacity-50">
+                        <i class="fa fa-copy mr-3 text-xl"></i>
+                        <div class="text-left">
+                            <div class="font-medium">复制结果文本</div>
+                            <div class="text-xs text-gray-400">复制到剪贴板，可粘贴到其他应用</div>
+                        </div>
+                    </button>
+                </div>
+                
+                <div class="flex justify-end">
+                    <button id="close-modal" class="bg-gray-200 hover:bg-gray-300 text-gray-700 font-medium py-2 px-6 rounded-lg transition-all-300 focus:outline-none focus:ring-2 focus:ring-gray-400 focus:ring-opacity-50">
+                        关闭
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- 底部信息 -->
+        <footer class="text-center text-gray-500 text-sm mt-12">
+            <p>© 2026 情绪健康测试 | 本测试仅供参考，不构成医疗建议</p>
+            <div class="mt-2 flex justify-center space-x-4">
+                <a href="#" class="text-blue-500 hover:text-blue-700 transition-all-300">关于我们</a>
+                <a href="#" class="text-blue-500 hover:text-blue-700 transition-all-300">隐私政策</a>
+                <a href="#" class="text-blue-500 hover:text-blue-700 transition-all-300">联系方式</a>
+            </div>
+        </footer>
+    </div>
+
+    <script>
+        // 问卷数据
+        const questions = [
+            {
+                id: 1,
+                text: "感觉情绪低落、抑郁或绝望",
+                category: "情绪状态",
+                options: [
+                    { value: 0, text: "完全没有", score: 4 },
+                    { value: 1, text: "有几天", score: 3 },
+                    { value: 2, text: "超过一半天数", score: 2 },
+                    { value: 3, text: "几乎每天", score: 1 }
+                ],
+                weight: 1
+            },
+            {
+                id: 2,
+                text: "对做事情几乎没有兴趣或乐趣",
+                category: "情绪状态",
+                options: [
+                    { value: 0, text: "完全没有", score: 4 },
+                    { value: 1, text: "有几天", score: 3 },
+                    { value: 2, text: "超过一半天数", score: 2 },
+                    { value: 3, text: "几乎每天", score: 1 }
+                ],
+                weight: 1
+            },
+            {
+                id: 3,
+                text: "入睡困难、睡不安稳或睡太多",
+                category: "睡眠质量",
+                options: [
+                    { value: 0, text: "完全没有", score: 4 },
+                    { value: 1, text: "有几天", score: 3 },
+                    { value: 2, text: "超过一半天数", score: 2 },
+                    { value: 3, text: "几乎每天", score: 1 }
+                ],
+                weight: 1
+            },
+            {
+                id: 4,
+                text: "感觉疲倦或没有活力",
+                category: "身体状态",
+                options: [
+                    { value: 0, text: "完全没有", score: 4 },
+                    { value: 1, text: "有几天", score: 3 },
+                    { value: 2, text: "超过一半天数", score: 2 },
+                    { value: 3, text: "几乎每天", score: 1 }
+                ],
+                weight: 1
+            },
+            {
+                id: 5,
+                text: "食欲不振或暴饮暴食",
+                category: "身体状态",
+                options: [
+                    { value: 0, text: "完全没有", score: 4 },
+                    { value: 1, text: "有几天", score: 3 },
+                    { value: 2, text: "超过一半天数", score: 2 },
+                    { value: 3, text: "几乎每天", score: 1 }
+                ],
+                weight: 1
+            },
+            {
+                id: 6,
+                text: "觉得自己很糟糕，或觉得自己很失败，或让自己或家人失望",
+                category: "自我认知",
+                options: [
+                    { value: 0, text: "完全没有", score: 4 },
+                    { value: 1, text: "有几天", score: 3 },
+                    { value: 2, text: "超过一半天数", score: 2 },
+                    { value: 3, text: "几乎每天", score: 1 }
+                ],
+                weight: 1
+            },
+            {
+                id: 7,
+                text: "难以集中注意力，例如阅读报纸或看电视时",
+                category: "认知功能",
+                options: [
+                    { value: 0, text: "完全没有", score: 4 },
+                    { value: 1, text: "有几天", score: 3 },
+                    { value: 2, text: "超过一半天数", score: 2 },
+                    { value: 3, text: "几乎每天", score: 1 }
+                ],
+                weight: 1
+            },
+            {
+                id: 8,
+                text: "行动或说话缓慢到别人都能注意到，或刚好相反，坐立不安、烦躁或动来动去",
+                category: "行为表现",
+                options: [
+                    { value: 0, text: "完全没有", score: 4 },
+                    { value: 1, text: "有几天", score: 3 },
+                    { value: 2, text: "超过一半天数", score: 2 },
+                    { value: 3, text: "几乎每天", score: 1 }
+                ],
+                weight: 1
+            },
+            {
+                id: 9,
+                text: "感觉紧张、焦虑或烦躁",
+                category: "情绪状态",
+                options: [
+                    { value: 0, text: "完全没有", score: 4 },
+                    { value: 1, text: "有几天", score: 3 },
+                    { value: 2, text: "超过一半天数", score: 2 },
+                    { value: 3, text: "几乎每天", score: 1 }
+                ],
+                weight: 1
+            },
+            {
+                id: 10,
+                text: "无法停止或控制担忧",
+                category: "情绪状态",
+                options: [
+                    { value: 0, text: "完全没有", score: 4 },
+                    { value: 1, text: "有几天", score: 3 },
+                    { value: 2, text: "超过一半天数", score: 2 },
+                    { value: 3, text: "几乎每天", score: 1 }
+                ],
+                weight: 1
+            },
+            {
+                id: 11,
+                text: "过度担心不同的事情",
+                category: "情绪状态",
+                options: [
+                    { value: 0, text: "完全没有", score: 4 },
+                    { value: 1, text: "有几天", score: 3 },
+                    { value: 2, text: "超过一半天数", score: 2 },
+                    { value: 3, text: "几乎每天", score: 1 }
+                ],
+                weight: 1
+            },
+            {
+                id: 12,
+                text: "难以放松",
+                category: "情绪状态",
+                options: [
+                    { value: 0, text: "完全没有", score: 4 },
+                    { value: 1, text: "有几天", score: 3 },
+                    { value: 2, text: "超过一半天数", score: 2 },
+                    { value: 3, text: "几乎每天", score: 1 }
+                ],
+                weight: 1
+            },
+            {
+                id: 13,
+                text: "变得容易烦恼或急躁",
+                category: "情绪状态",
+                options: [
+                    { value: 0, text: "完全没有", score: 4 },
+                    { value: 1, text: "有几天", score: 3 },
+                    { value: 2, text: "超过一半天数", score: 2 },
+                    { value: 3, text: "几乎每天", score: 1 }
+                ],
+                weight: 1
+            },
+            {
+                id: 14,
+                text: "感觉害怕，好像有可怕的事情会发生",
+                category: "情绪状态",
+                options: [
+                    { value: 0, text: "完全没有", score: 4 },
+                    { value: 1, text: "有几天", score: 3 },
+                    { value: 2, text: "超过一半天数", score: 2 },
+                    { value: 3, text: "几乎每天", score: 1 }
+                ],
+                weight: 1
+            },
+            {
+                id: 15,
+                text: "你是否曾经觉得有一个人爱你或尊重你？",
+                category: "社交功能",
+                options: [
+                    { value: 0, text: "是", score: 4 },
+                    { value: 1, text: "否", score: 1 },
+                    { value: 2, text: "说不清", score: 2 }
+                ],
+                weight: 1
+            },
+            {
+                id: 16,
+                text: "你是否觉得没有人十分了解你？",
+                category: "社交功能",
+                options: [
+                    { value: 0, text: "是", score: 1 },
+                    { value: 1, text: "否", score: 4 },
+                    { value: 2, text: "说不清", score: 2 }
+                ],
+                weight: 1
+            },
+            {
+                id: 17,
+                text: "你在早晨起来时最经常的感觉是什么？",
+                category: "情绪状态",
+                options: [
+                    { value: 0, text: "忧郁", score: 1 },
+                    { value: 1, text: "快乐", score: 4 },
+                    { value: 2, text: "说不清", score: 2 }
+                ],
+                weight: 1
+            },
+            {
+                id: 18,
+                text: "你是否愿意和家人/朋友进行简单的交流，不会刻意回避社交、自我封闭？",
+                category: "社交功能",
+                options: [
+                    { value: 0, text: "完全符合", score: 4 },
+                    { value: 1, text: "基本符合", score: 3 },
+                    { value: 2, text: "一般/偶尔符合", score: 2 },
+                    { value: 4, text: "完全不符合", score: 0 }
+                    { value: 4, text: "完全不符合", score: 0 }
+                ],
+                weight: 1
+            },
+            {
+                id: 19,
+                text: "你能接纳自己的不完美，不会因为一点小事就自我否定、过度自责？",
+                category: "自我认知",
+                options: [
+                    { value: 0, text: "完全符合", score: 4 },
+                    { value: 1, text: "基本符合", score: 3 },
+                    { value: 2, text: "一般/偶尔符合", score: 2 },
+                    { value: 4, text: "完全不符合", score: 0 }
+                    { value: 4, text: "完全不符合", score: 0 }
+                ],
+                weight: 1
+            },
+            {
+                id: 20,
+                text: "你对生活中的小事能感受到一点美好(如好吃的饭、温暖的阳光)，不会觉得一切索然无味？",
+                category: "情绪状态",
+                options: [
+                    { value: 0, text: "完全符合", score: 4 },
+                    { value: 1, text: "基本符合", score: 3 },
+                    { value: 2, text: "一般/偶尔符合", score: 2 },
+                    { value: 4, text: "完全不符合", score: 0 }
+                    { value: 4, text: "完全不符合", score: 0 }
+                ],
+                weight: 1
+            }
+        ];
+
+        // 结果解释数据
+        const resultInterpretations = {
+            excellent: {
+                title: "情绪健康状况优秀",
+                description: "您的情绪健康状况非常好，显示出良好的心理适应能力和情绪管理能力。您能够积极应对生活中的挑战，保持情绪稳定，并享受生活的乐趣。",
+                suggestions: [
+                    "继续保持当前的生活方式和心态",
+                    "定期进行自我反思，关注情绪变化",
+                    "培养更多兴趣爱好，丰富生活内容",
+                    "帮助身边的朋友或家人，分享您的积极能量"
+                ]
+            },
+            good: {
+                title: "情绪健康状况良好",
+                description: "您的情绪健康状况总体良好，但仍有一些小的方面可以改进。您能够应对大多数日常压力，但在某些情况下可能会感到些许压力或情绪波动。",
+                suggestions: [
+                    "学习一些简单的放松技巧，如深呼吸、冥想等",
+                    "保持规律的作息时间，确保充足的睡眠",
+                    "适当增加体育锻炼，有助于释放压力",
+                    "与亲友保持良好的沟通，分享情绪体验"
+                ]
+            },
+            moderate: {
+                title: "情绪健康状况一般",
+                description: "您的情绪健康状况处于中等水平，可能在某些时候会感到压力、焦虑或情绪低落。这些感受可能会影响您的日常生活和工作，但尚未达到严重程度。",
+                suggestions: [
+                    "关注情绪变化的触发因素，尝试识别并避免这些因素",
+                    "学习情绪管理技巧，如认知重构、情绪表达等",
+                    "增加社交活动，避免孤独和 isolation",
+                    "考虑寻求专业心理咨询师的帮助，获取更具体的建议"
+                ]
+            },
+            poor: {
+                title: "情绪健康状况较差",
+                description: "您的情绪健康状况可能存在一些问题，经常感到压力、焦虑、抑郁或其他负面情绪。这些感受可能已经对您的日常生活、工作或人际关系产生了明显的影响。",
+                suggestions: [
+                    "尽快寻求专业心理咨询师或医生的帮助",
+                    "与亲友分享您的感受，寻求支持和理解",
+                    "避免使用酒精或其他物质来应对情绪问题",
+                    "保持规律的生活作息，即使感到困难也要坚持"
+                ]
+            },
+            very_poor: {
+                title: "情绪健康状况严重",
+                description: "您的情绪健康状况可能非常严重，持续经历强烈的负面情绪，如深度抑郁、严重焦虑或绝望。这些感受已经显著影响了您的日常生活、工作和人际关系。",
+                suggestions: [
+                    "立即寻求专业心理健康服务，如心理咨询师、心理医生或精神科医生",
+                    "告诉亲友您的状况，确保有人陪伴和支持",
+                    "避免独处，特别是在情绪特别低落的时候",
+                    "如果有自杀念头，请立即拨打心理危机干预热线或前往最近的医院就诊"
+                ]
+            }
+        };
+
+        // 类别解释数据
+        const categoryInterpretations = {
+            "情绪状态": {
+                excellent: "您的情绪状态非常稳定，能够保持积极乐观的心态，即使面对挑战也能很好地调整情绪。",
+                good: "您的情绪状态总体良好，大部分时间能够保持积极，但有时会有轻微的波动。",
+                moderate: "您的情绪状态有时会出现波动，可能会经历焦虑、抑郁或其他负面情绪，但通常能够自行调整。",
+                poor: "您的情绪状态经常不稳定，负面情绪出现的频率较高，可能需要更多的努力来管理情绪。",
+                very_poor: "您的情绪状态严重不稳定，负面情绪非常强烈且持续，已经影响到日常生活和功能。"
+            },
+            "睡眠质量": {
+                excellent: "您的睡眠质量非常好，能够轻松入睡，睡眠安稳，醒来后感觉精力充沛。",
+                good: "您的睡眠质量总体良好，大部分时间能够正常入睡和醒来，偶尔可能会有轻微的睡眠问题。",
+                moderate: "您的睡眠质量一般，有时会遇到入睡困难、睡眠中断或早醒等问题，但尚未严重影响白天的功能。",
+                poor: "您的睡眠质量较差，经常遇到睡眠问题，如难以入睡、频繁醒来或睡眠不深，已经对白天的精力和功能产生了影响。",
+                very_poor: "您的睡眠质量非常差，严重的睡眠问题已经显著影响了您的日常生活、工作和情绪状态。"
+            },
+            "身体状态": {
+                excellent: "您的身体状态非常好，精力充沛，没有明显的身体不适或疲劳感。",
+                good: "您的身体状态总体良好，大部分时间感觉精力充足，偶尔可能会有轻微的疲劳或不适。",
+                moderate: "您的身体状态一般，有时会感到疲劳、不适或其他身体症状，但通常能够通过休息或自我调整来改善。",
+                poor: "您的身体状态经常不佳，频繁感到疲劳、不适或其他身体症状，已经影响到日常活动和功能。",
+                very_poor: "您的身体状态非常差，持续的身体不适或极度疲劳已经显著限制了您的日常活动和功能。"
+            },
+            "自我认知": {
+                excellent: "您有非常健康的自我认知，能够接纳自己的优点和不足，保持自信和自尊。",
+                good: "您的自我认知总体健康，大部分时间能够保持积极的自我形象，偶尔可能会有轻微的自我怀疑。",
+                moderate: "您的自我认知有时会出现波动，在某些情况下可能会有自我怀疑或自我批评，但通常能够保持基本的自信。",
+                poor: "您的自我认知经常消极，自我批评和自我怀疑的程度较高，可能影响到自信和自尊。",
+                very_poor: "您的自我认知非常消极，严重的自我否定、自卑或无价值感已经显著影响了您的情绪和功能。"
+            },
+            "社交功能": {
+                excellent: "您的社交功能非常好，能够轻松地与他人建立和维持良好的关系，享受社交活动。",
+                good: "您的社交功能总体良好，大部分时间能够与他人正常交往，有稳定的社交网络。",
+                moderate: "您的社交功能一般，有时会在社交场合感到些许不适或困难，但通常能够应对基本的社交需求。",
+                poor: "您的社交功能经常遇到困难，可能会回避社交活动，或在社交中感到明显的不适和压力。",
+                very_poor: "您的社交功能严重受损，显著的社交困难或孤立已经影响到您的情绪健康和生活质量。"
+            },
+            "认知功能": {
+                excellent: "您的认知功能非常好，思维清晰，注意力集中，能够高效地处理信息和解决问题。",
+                good: "您的认知功能总体良好，大部分时间能够保持清晰的思维和良好的注意力，偶尔可能会有轻微的注意力分散。",
+                moderate: "您的认知功能有时会受到影响，可能会经历注意力不集中、思维迟缓或记忆力下降等问题，但通常能够完成日常任务。",
+                poor: "您的认知功能经常受到影响，注意力、记忆力或思维能力的下降已经影响到日常任务和功能。",
+                very_poor: "您的认知功能严重受损，显著的认知困难已经严重影响了您的日常生活、工作或学习能力。"
+            },
+            "行为表现": {
+                excellent: "您的行为表现非常健康，能够以适应的方式表达情绪和需求，行为与环境相协调。",
+                good: "您的行为表现总体健康，大部分时间能够以适应的方式应对情境，偶尔可能会有轻微的行为不当。",
+                moderate: "您的行为表现有时会出现问题，在某些情况下可能会有冲动、退缩或其他不适应的行为，但通常能够自我控制。",
+                poor: "您的行为表现经常出现问题，不适应的行为模式已经影响到人际关系或日常功能。",
+                very_poor: "您的行为表现严重异常，显著的行为问题已经对自己或他人造成了伤害，或严重干扰了社会功能。"
+            }
+        };
+
+        // DOM元素
+        const introSection = document.getElementById('intro-section');
+        const testSection = document.getElementById('test-section');
+        const resultSection = document.getElementById('result-section');
+        const startTestBtn = document.getElementById('start-test');
+        const prevQuestionBtn = document.getElementById('prev-question');
+        const nextQuestionBtn = document.getElementById('next-question');
+        const questionNumber = document.getElementById('current-question');
+        const questionCategory = document.getElementById('question-category');
+        const questionText = document.getElementById('question-text');
+        const optionsContainer = document.getElementById('options-container');
+        const progressBar = document.getElementById('progress-bar');
+        const saveResultBtn = document.getElementById('save-result');
+        const restartTestBtn = document.getElementById('restart-test');
+        const saveModal = document.getElementById('save-modal');
+        const closeModalBtn = document.getElementById('close-modal');
+        const saveAsImageBtn = document.getElementById('save-as-image');
+        const saveAsPdfBtn = document.getElementById('save-as-pdf');
+        const copyResultBtn = document.getElementById('copy-result');
+
+        // 测试状态
+        let currentQuestionIndex = 0;
+        const answers = {};
+        let testCompleted = false;
+
+        // 开始测试
+        startTestBtn.addEventListener('click', () => {
+            introSection.classList.add('hidden');
+            testSection.classList.remove('hidden');
+            showQuestion(currentQuestionIndex);
+            updateProgressBar();
+        });
+
+        // 显示当前问题
+        function showQuestion(index) {
+            const question = questions[index];
+            questionNumber.textContent = index + 1;
+            questionCategory.textContent = question.category;
+            questionText.textContent = question.text;
+            
+            // 清空选项容器
+            optionsContainer.innerHTML = '';
+            
+            // 添加选项
+            question.options.forEach(option => {
+                const optionDiv = document.createElement('div');
+                optionDiv.className = 'flex items-center';
+                
+                const radioInput = document.createElement('input');
+                radioInput.type = 'radio';
+                radioInput.name = 'question-' + question.id;
+                radioInput.id = 'option-' + option.value;
+                radioInput.value = option.value;
+                radioInput.className = 'w-4 h-4 text-blue-600 border-gray-300 focus:ring-blue-500 focus:ring-opacity-50';
+                
+                // 如果之前已经选择了这个选项，选中它
+                if (answers[question.id] === option.value) {
+                    radioInput.checked = true;
+                }
+                
+                // 监听选项变化
+                radioInput.addEventListener('change', () => {
+                    answers[question.id] = option.value;
+                });
+                
+                const label = document.createElement('label');
+                label.htmlFor = 'option-' + option.value;
+                label.className = 'ml-2 block text-gray-700 hover:text-blue-600 transition-all-300 cursor-pointer';
+                label.textContent = option.text;
+                
+                optionDiv.appendChild(radioInput);
+                optionDiv.appendChild(label);
+                optionsContainer.appendChild(optionDiv);
+            });
+            
+            // 更新按钮状态
+            prevQuestionBtn.classList.toggle('hidden', index === 0);
+            nextQuestionBtn.textContent = index === questions.length - 1 ? '完成测试' : '下一题';
+        }
+
+        // 更新进度条
+        function updateProgressBar() {
+            const progress = ((currentQuestionIndex + 1) / questions.length) * 100;
+            progressBar.style.width = progress + '%';
+        }
+
+        // 下一题
+        nextQuestionBtn.addEventListener('click', () => {
+            // 检查是否选择了选项
+            if (answers[questions[currentQuestionIndex].id] === undefined) {
+                alert('请选择一个选项');
+                return;
+            }
+            
+            // 如果是最后一题，显示结果
+            if (currentQuestionIndex === questions.length - 1) {
+                calculateResults();
+                testSection.classList.add('hidden');
+                resultSection.classList.remove('hidden');
+                testCompleted = true;
+                return;
+            }
+            
+            // 否则显示下一题
+            currentQuestionIndex++;
+            showQuestion(currentQuestionIndex);
+            updateProgressBar();
+        });
+
+        // 上一题
+        prevQuestionBtn.addEventListener('click', () => {
+            if (currentQuestionIndex > 0) {
+                currentQuestionIndex--;
+                showQuestion(currentQuestionIndex);
+                updateProgressBar();
+            }
+        });
+
+        // 计算测试结果
+        function calculateResults() {
+            // 计算总分和各类别分数
+            let totalScore = 0;
+            const categoryScores = {};
+            const categoryWeights = {};
+            
+            questions.forEach(question => {
+                const selectedOption = question.options.find(opt => opt.value === answers[question.id]);
+                const score = selectedOption ? selectedOption.score : 0;
+                const weightedScore = score * question.weight;
+                
+                totalScore += weightedScore;
+                
+                // 累计类别分数
+                if (!categoryScores[question.category]) {
+                    categoryScores[question.category] = 0;
+                    categoryWeights[question.category] = 0;
+                }
+                categoryScores[question.category] += weightedScore;
+                categoryWeights[question.category] += question.weight;
+            });
+            
+            // 计算各类别平均分
+            const categoryAverages = {};
+            Object.keys(categoryScores).forEach(category => {
+                const maxPossibleScore = 4 * categoryWeights[category]; // 假设最高分为4分
+                categoryAverages[category] = (categoryScores[category] / maxPossibleScore) * 10;
+            });
+            
+            // 计算总体健康指数 (0-100)
+            const maxTotalScore = questions.reduce((sum, q) => sum + (4 * q.weight), 0);
+            const healthIndex = Math.round((totalScore / maxTotalScore) * 100);
+            
+            // 更新结果显示
+            document.getElementById('total-score').textContent = healthIndex + '/100';
+            document.getElementById('total-score-bar').style.width = healthIndex + '%';
+            
+            // 根据分数范围设置颜色
+            const totalScoreBar = document.getElementById('total-score-bar');
+            if (healthIndex >= 80) {
+                totalScoreBar.className = 'bg-gradient-to-r from-green-500 to-green-400 h-3 rounded-full transition-all duration-500';
+            } else if (healthIndex >= 60) {
+                totalScoreBar.className = 'bg-gradient-to-r from-green-400 to-yellow-400 h-3 rounded-full transition-all duration-500';
+            } else if (healthIndex >= 40) {
+                totalScoreBar.className = 'bg-gradient-to-r from-yellow-500 to-orange-500 h-3 rounded-full transition-all duration-500';
+            } else {
+                totalScoreBar.className = 'bg-gradient-to-r from-orange-500 to-red-500 h-3 rounded-full transition-all duration-500';
+            }
+            
+            // 更新各类别分数
+            Object.keys(categoryAverages).forEach(category => {
+                const scoreElement = document.getElementById(category.toLowerCase().replace(/\s+/g, '-') + '-score');
+                const barElement = document.getElementById(category.toLowerCase().replace(/\s+/g, '-') + '-score-bar');
+                
+                if (scoreElement && barElement) {
+                    const roundedScore = Math.round(categoryAverages[category] * 10) / 10;
+                    scoreElement.textContent = roundedScore + '/10';
+                    barElement.style.width = (roundedScore * 10) + '%';
+                    
+                    // 根据分数范围设置颜色
+                    if (roundedScore >= 8) {
+                        barElement.className = 'bg-green-500 h-2 rounded-full transition-all duration-500';
+                    } else if (roundedScore >= 6) {
+                        barElement.className = 'bg-green-400 h-2 rounded-full transition-all duration-500';
+                    } else if (roundedScore >= 4) {
+                        barElement.className = 'bg-yellow-500 h-2 rounded-full transition-all duration-500';
+                    } else {
+                        barElement.className = 'bg-red-500 h-2 rounded-full transition-all duration-500';
+                    }
+                }
+            });
+            
+            // 生成结果解读
+            let interpretationKey;
+            if (healthIndex >= 80) {
+                interpretationKey = 'excellent';
+            } else if (healthIndex >= 60) {
+                interpretationKey = 'good';
+            } else if (healthIndex >= 40) {
+                interpretationKey = 'moderate';
+            } else if (healthIndex >= 20) {
+                interpretationKey = 'poor';
+            } else {
+                interpretationKey = 'very_poor';
+            }
+            
+            const interpretation = resultInterpretations[interpretationKey];
+            document.getElementById('result-interpretation').innerHTML = `
+                <p class="font-medium text-blue-800 mb-2">${interpretation.title}</p>
+                <p>${interpretation.description}</p>
+            `;
+            
+            // 添加类别解读
+            let categoryInterpretationHTML = '<div class="mt-4 space-y-3">';
+            Object.keys(categoryAverages).forEach(category => {
+                let categoryInterpretationKey;
+                const score = categoryAverages[category];
+                
+                if (score >= 8) {
+                    categoryInterpretationKey = 'excellent';
+                } else if (score >= 6) {
+                    categoryInterpretationKey = 'good';
+                } else if (score >= 4) {
+                    categoryInterpretationKey = 'moderate';
+                } else if (score >= 2) {
+                    categoryInterpretationKey = 'poor';
+                } else {
+                    categoryInterpretationKey = 'very_poor';
+                }
+                
+                const categoryInterpretation = categoryInterpretations[category][categoryInterpretationKey];
+                if (categoryInterpretation) {
+                    categoryInterpretationHTML += `
+                        <div>
+                            <p class="font-medium text-blue-700">${category}:</p>
+                            <p class="text-gray-600">${categoryInterpretation}</p>
+                        </div>
+                    `;
+                }
+            });
+            categoryInterpretationHTML += '</div>';
+            document.getElementById('result-interpretation').innerHTML += categoryInterpretationHTML;
+            
+            // 生成建议
+            const suggestionsList = document.getElementById('result-suggestions');
+            suggestionsList.innerHTML = '';
+            interpretation.suggestions.forEach(suggestion => {
+                const li = document.createElement('li');
+                li.textContent = suggestion;
+                suggestionsList.appendChild(li);
+            });
+            
+            // 如果分数很低，添加紧急建议
+            if (healthIndex < 40) {
+                const emergencyLi = document.createElement('li');
+                emergencyLi.className = 'text-red-600 font-medium';
+                emergencyLi.textContent = '请注意：如果您有自杀或自伤的念头，请立即寻求专业帮助或拨打心理危机干预热线。';
+                suggestionsList.appendChild(emergencyLi);
+            }
+        }
+
+        // 保存结果
+        saveResultBtn.addEventListener('click', () => {
+            saveModal.classList.remove('hidden');
+        });
+
+        // 关闭弹窗
+        closeModalBtn.addEventListener('click', () => {
+            saveModal.classList.add('hidden');
+        });
+
+        // 点击弹窗外部关闭
+        saveModal.addEventListener('click', (e) => {
+            if (e.target === saveModal) {
+                saveModal.classList.add('hidden');
+            }
+        });
+
+        // 保存为图片
+        saveAsImageBtn.addEventListener('click', () => {
+            alert('此功能正在开发中，敬请期待！');
+            saveModal.classList.add('hidden');
+        });
+
+        // 保存为PDF
+        saveAsPdfBtn.addEventListener('click', () => {
+            alert('此功能正在开发中，敬请期待！');
+            saveModal.classList.add('hidden');
+        });
+
+        // 复制结果文本
+        copyResultBtn.addEventListener('click', () => {
+            const resultText = document.getElementById('result-interpretation').textContent + 
+                              '\n\n建议：\n' + 
+                              Array.from(document.getElementById('result-suggestions').children)
+                                  .map(li => li.textContent)
+                                  .join('\n');
+            
+            navigator.clipboard.writeText(resultText).then(() => {
+                alert('结果已复制到剪贴板！');
+                saveModal.classList.add('hidden');
+            }).catch(err => {
+                console.error('复制失败:', err);
+                alert('复制失败，请手动选择文本进行复制。');
+            });
+        });
+
+        // 重新测试
+        restartTestBtn.addEventListener('click', () => {
+            // 重置测试状态
+            currentQuestionIndex = 0;
+            Object.keys(answers).forEach(key => delete answers[key]);
+            testCompleted = false;
+            
+            // 重置UI
+            resultSection.classList.add('hidden');
+            testSection.classList.remove('hidden');
+            showQuestion(currentQuestionIndex);
+            updateProgressBar();
+        });
+    </script>
+</body>
+</html>
