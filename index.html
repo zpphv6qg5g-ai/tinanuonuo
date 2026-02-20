@@ -1,39 +1,6 @@
 <!DOCTYPE html>
 <html lang="zh-CN">
 <head>
-
- 
-
-<!-- Logo区域 -->
-<div class="logo">
-  <img src="https://raw.githubusercontent.com/zpphv6qg5g-ai/nuonuo/refs/heads/main/logo%E6%A8%AA%E7%89%88.png" alt="若言心理" class="logo-img">
-</div>
-
-<style>
-/* Logo样式 */
-.logo {
-  text-align: center;
-  margin-bottom: 3px;
-}
-
-.logo-img {
-  max-width: 400px;
-  height: auto;
-  display: inline-block;
- margin-top: 40px;
-margin-bottom: -20px;
-  border-radius: 2px;
-  box-shadow: 0 2px 8px rgba(0,0,0,0.1);
-}
-
-/* 响应式设计 */
-@media (max-width: 768px) {
-  .logo-img {
-    max-width: 150px;
-  }
-}
-</style>
-
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>情绪健康测试 - 若言心理</title>
@@ -426,6 +393,11 @@ margin-bottom: -20px;
 </head>
 <body>
     <div class="container">
+        <!-- Logo区域 -->
+        <div class="logo">
+          <img src="https://raw.githubusercontent.com/zpphv6qg5g-ai/nuonuo/refs/heads/main/logo%E6%A8%AA%E7%89%88.png" alt="若言心理" class="logo-img">
+        </div>
+
         <div class="header">
             <h1>情绪健康测试</h1>
             <p>了解自己的情绪状态，关爱心理健康</p>
@@ -699,7 +671,8 @@ margin-bottom: -20px;
                 options: [
                     { value: 0, text: "忧郁", score: 1 },
                     { value: 1, text: "快乐", score: 4 },
-                    { value: 2, text: "说不清", score: 2 }
+                    { value: 2, text: "平静", score: 3 },
+                    { value: 3, text: "说不清", score: 2 }
                 ]
             },
             {
